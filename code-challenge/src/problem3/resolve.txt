@@ -1,0 +1,61 @@
+1. lhsPriority is never defined
+
+if (lhsPriority > -99) {
+  // remain code
+}
+
+Fix: using balancePriority
+
+================================================================================================================================================================================================================================================
+
+2. Refactor this code to make cleaner and concise return logic:
+
+if (lhsPriority > -99) {
+  if (balance.amount <= 0) {
+    return true;
+  }
+}
+return false;
+
+Fix: return balance.amount <= 0 && balancePriority > -99;
+
+================================================================================================================================================================================================================================================
+
+3. Unnecessary useMemo dependencies
+
+useMemo(() => {...}, [balances, prices]) because prices is not used in the memoized function. So remove prices!
+
+Fix: useMemo(() => {...}, [balances])
+
+================================================================================================================================================================================================================================================
+
+4. Don't use index as key like this: key={index}
+Fix: Use a unique key like currency or currency + blockchain.
+
+================================================================================================================================================================================================================================================
+
+5. Remove unnecessary props
+
+const { children, ...rest } = props; ( children is destructured but never used. )
+
+Fix: const { ...rest } = props;
+
+================================================================================================================================================================================================================================================
+
+6. sortedBalances is of type WalletBalance[], but it's being typed as FormattedWalletBalance.
+
+(sortedBalances.map((balance: FormattedWalletBalance) => {...}))
+
+Fix: Either use formattedBalances, or change the type and logic accordingly.
+
+================================================================================================================================================================================================================================================
+
+7. WalletBalance interface doesn’t include a blockchain field.
+Fix: Add blockchain: string to the WalletBalance interface.
+
+================================================================================================================================================================================================================================================
+
+8. Don't use any Type : getPriority = (blockchain: any)
+
+Fix: Use a union of supported blockchain strings or a string literal type.
+getPriority = (blockchain: 'Osmosis' | 'Ethereum' | 'Arbitrum' | 'Zilliqa' | 'Neo' | string)
